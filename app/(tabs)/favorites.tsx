@@ -7,7 +7,7 @@ import { Colors, Fonts } from "@/constants/theme";
 
 
 export default function FavoritesScreen() {
-    const { favorites, loaded, reload } = useFavorites();
+    const { favorites, loaded, reload, toggleFavorite, isFavorite    } = useFavorites();
 
     useFocusEffect(
         useCallback(() => {
@@ -37,69 +37,89 @@ export default function FavoritesScreen() {
         <Text style={styles.title}>Favorites</Text>
 
         <FlatList
-            data={favorites}
-            keyExtractor={(name) => name}
-            contentContainerStyle={{ paddingBottom: 40 }}
-            renderItem={({ item }) => (
-                <Link
+          data={favorites}
+          keyExtractor={(name) => name}
+          contentContainerStyle={{ paddingBottom: 40 }}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              {/* Name navigates to detail */}
+              <Link
                 href={{ pathname: "/pokemon/[name]", params: { name: item } }}
                 asChild>
-                <Pressable style={styles.card}>
-                    <Text style={styles.cardText}>{item}</Text>
+                <Pressable style={{ flex: 1 }}>
+                  <Text style={styles.cardText}>{item}</Text>
                 </Pressable>
-                </Link>
-            )}
+              </Link>
+
+              {/* Star toggles favorite */}
+              <Pressable
+                onPress={() => {
+                  toggleFavorite(item);
+                  reload(); // immediately refresh list
+                }}>
+                <Text style={styles.star}>{isFavorite(item) ? "★" : "☆"}</Text>
+              </Pressable>
+            </View>
+          )}
         />
       </View>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-    padding: 20,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: Colors.light.background,
+        padding: 20,
+    },
 
-  title: {
-    fontSize: 32,
-    fontFamily: Fonts.sans,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-    color: Colors.light.text,
-  },
+    title: {
+        fontSize: 32,
+        fontFamily: Fonts.sans,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 20,
+        color: Colors.light.text,
+    },
 
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    center: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 
-  emptyText: {
-    fontSize: 22,
-    fontFamily: Fonts.sans,
-    color: Colors.light.text,
-    marginBottom: 8,
-  },
+    emptyText: {
+        fontSize: 22,
+        fontFamily: Fonts.sans,
+        color: Colors.light.text,
+        marginBottom: 8,
+    },
 
-  emptySub: {
-    fontSize: 16,
-    fontFamily: Fonts.sans,
-    color: Colors.light.icon,
-  },
+    emptySub: {
+        fontSize: 16,
+        fontFamily: Fonts.sans,
+        color: Colors.light.icon,
+    },
 
-  card: {
-    backgroundColor: "#f2f2f2",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 10,
-  },
+    card: {
+        backgroundColor: "#f2f2f2",
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
 
-  cardText: {
-    fontSize: 18,
-    fontFamily: Fonts.sans,
-    textTransform: "capitalize",
-    color: Colors.light.text,
-  },
+    cardText: {
+        fontSize: 18,
+        fontFamily: Fonts.sans,
+        textTransform: "capitalize",
+        color: Colors.light.text,
+    },
+
+    star: {
+        fontSize: 24,
+        color: Colors.light.tint,
+    },
 });
