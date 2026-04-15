@@ -113,7 +113,7 @@ export default function PokemonDetailScreen() {
             </Text>
           </View>
 
-          {/* STATS */}
+          {/*Stats*/}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Stats</Text>
             {data.stats.map((stat: any) => (
@@ -137,6 +137,16 @@ export default function PokemonDetailScreen() {
             {data.abilities.map((ability: any) => (
               <Text key={ability.ability.name} style={styles.itemText}>
                 • {ability.ability.name} {ability.is_hidden ? "(Hidden)" : ""}
+              </Text>
+            ))}
+          </View>
+
+          {/*Moves*/}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Moves</Text>
+            {data.moves.slice(0, 5).map((m: any) => (
+              <Text key={m.move.name} style={styles.itemText}>
+                • {m.move.name}
               </Text>
             ))}
           </View>
