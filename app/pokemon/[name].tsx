@@ -101,6 +101,16 @@ export default function PokemonDetailScreen() {
         </View>
 
         <ScrollView style={styles.container}>
+          {/* STATS */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Stats</Text>
+            {data.stats.map((stat: any) => (
+              <Text key={stat.stat.name} style={styles.itemText}>
+                {stat.stat.name}: {stat.base_stat}
+              </Text>
+            ))}
+          </View>
+
           {/*About*/}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>About</Text>
