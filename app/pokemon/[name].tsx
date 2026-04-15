@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, ActivityIndicator, Pressable } from "react-native";
+import { View, Text, Image, ActivityIndicator, Pressable, StyleSheet } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { fetchPokemonDetail } from "../../src/api/pokeClient";
+import { Colors, Fonts } from "@/constants/theme";
 
 export default function PokemonDetailScreen() {
   const { name } = useLocalSearchParams<{ name?: string }>();
@@ -29,61 +30,135 @@ export default function PokemonDetailScreen() {
     load();
   }, [name]);
 
-    if (!name) {
-        return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text>No Pokémon name provided.</Text>
-            </View>
-        );
-    }
+  if (!name) {
+    return (
+      <Centered>
+        <Text>No Pokémon name provided.</Text>
+      </Centered>
+    );
+  }
 
-    if (status === "loading") {
-        return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator />
-            </View>
-        );
-    } 
+  if (status === "loading") {
+    return (
+      <Centered>
+        <ActivityIndicator size="large" color={Colors.light.tint} />
+      </Centered>
+    );
+  }
 
-    if (status === "error") {
-        return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text>Error: {error}</Text>
-            <Pressable onPress={load}>
-                <Text style={{ color: "blue", marginTop: 8 }}>Try again</Text>
-            </Pressable>
-            </View>
-        );
-    }
+  if (status === "error") {
+    return (
+      <Centered>
+        <Text style={{ color: "red" }}>Error: {error}</Text>
+        <Pressable onPress={load}>
+          <Text style={{ color: Colors.light.tint, marginTop: 8 }}>Try again</Text>
+        </Pressable>
+      </Centered>
+    );
+  }
 
     if (!data) {
     return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>No Pokémon data found.</Text>
-        </View>
+        <Centered>
+            <Text>No Pokémon data found.</Text>
+        </Centered>
     );
     }
 
     return (
-    <View style={{ flex: 1, padding: 16 }}>
-        <Pressable onPress={() => router.back()}>
-        <Text style={{ color: "blue", marginBottom: 12 }}>← Back</Text>
-        </Pressable>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Pressable onPress={() => router.back()}>
+            <Text style={styles.back}>← Back</Text>
+          </Pressable>
+        </View>
 
-        <Text style={{ fontSize: 24, fontWeight: "bold" }}>{name}</Text>
+        <View style={styles.content}>
+            <Text style={styles.name}>{name}</Text>
 
-        {data.sprites?.front_default ? (
-        <Image
-            source={{ uri: data.sprites.front_default }}
-            style={{ width: 120, height: 120, marginVertical: 16 }}
-        />
-        ) : (
-        <Text>No image available.</Text>
-        )}
+            {data.sprites?.front_default ? (
+            <Image
+                source={{ uri: data.sprites.front_default }}
+                style={styles.image}
+            />
+            ) : (
+            <Text>No image available.</Text>
+            )}
 
-        <Text>Height: {data.height}</Text>
-        <Text>Weight: {data.weight}</Text>
-        <Text>Base experience: {data.base_experience}</Text>
-    </View>
+            <View style={styles.card}>
+                <Text style={styles.stat}>Height: {data.height}</Text>{" "}
+                <Text style={styles.stat}>Weight: {data.weight}</Text>{" "}
+                <Text style={styles.stat}>
+                    Base experience: {data.base_experience}
+                </Text>{" "}
+            </View>
+        </View>
+      </View>
     );
 }
+
+function Centered({ children }: any) {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      {children}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.light.background,
+        padding: 20,
+    alignItems: "stretch",
+    },
+
+    header: {
+        width: "100%",
+        alignItems: "flex-start",
+    marginBottom: 10,
+    },
+
+    back: {
+        color: Colors.light.tint,
+        fontSize: 18,
+    fontFamily: Fonts.sans,
+    },
+
+    content: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "flex-start",
+        width: "100%",
+    },
+
+    name: {
+        fontSize: 32,
+        fontFamily: Fonts.sans,
+        fontWeight: "bold",
+        textTransform: "capitalize",
+        color: Colors.light.text,
+        marginBottom: 20,
+    },
+
+    image: {
+        width: 200,
+        height: 200,
+        marginBottom: 20,
+    },
+
+    card: {
+        backgroundColor: "#f2f2f2",
+        padding: 20,
+        borderRadius: 16,
+        width: "100%",
+        marginTop: 10,
+    },
+
+    stat: {
+        fontSize: 18,
+        fontFamily: Fonts.sans,
+        marginBottom: 8,
+        color: Colors.light.text,
+    },
+});
