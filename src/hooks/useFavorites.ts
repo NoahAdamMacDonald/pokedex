@@ -7,18 +7,22 @@ export function useFavorites() {
     const [favorites, setFavorites] = useState<string[]>([]);
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
-    (async () => {
+    const load = async () => {
         try {
-        const raw = await AsyncStorage.getItem(KEY);
-        if (raw) {
-            setFavorites(JSON.parse(raw));
-        }
-        } catch (error) {
-        console.log("Failed to load favorites", error);
+            const raw = await AsyncStorage.getItem(KEY);
+            if(raw) {
+                setFavorites(JSON.parse(raw))
+            } else {
+                setFavorites([]);
+            }
+        } catch(error) {
+            console.error("Failed to load favorites", error);
         }
         setLoaded(true);
-    })();
+    };
+
+    useEffect(() => {
+        load();
     }, []);
 
     const save = async (next: string[])=> {
@@ -36,5 +40,5 @@ export function useFavorites() {
     
     const isFavorite = (name: string) => favorites.includes(name);
 
-    return { favorites, loaded, toggleFavorite, isFavorite };
+    return { favorites, loaded, toggleFavorite, isFavorite, reload: load };
 }
