@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Link } from 'expo-router';
 import { fetchPokemonList, PokemonListItem } from '../../src/api/pokeClient';
 import { useFavorites } from '../../src/hooks/useFavorites';
@@ -9,7 +10,7 @@ export default function HomeScreen() {
   const [data, setData] = useState<PokemonListItem[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle",);
   const [error, setError] = useState<string>("");
-  const { toggleFavorite, isFavorite } = useFavorites();
+  const { toggleFavorite, isFavorite, reload } = useFavorites();
 
   const load = async () => {
     try {
@@ -27,6 +28,12 @@ export default function HomeScreen() {
   useEffect(() => {
     load();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      reload();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
