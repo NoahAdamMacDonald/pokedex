@@ -18,7 +18,29 @@ export default function FavoritesScreen() {
         }, [])
     );
 
-    if (!loaded) {
+    useEffect(()=> {
+      const loadingDetails = async () => {
+        setLoadingDetails(true);
+        const results: Record<string, any> = {};
+
+        for(const name of favorites) {
+          try {
+            const data = await fetchPokemonDetail(name);
+            results[name] = data;
+          } catch (error: any) {
+            console.error(`Failed to load details for ${name}`, error);
+          }
+        }
+        setDetails(results);
+        setLoadingDetails(false);
+      };
+
+      if(favorites.length > 0) {
+        loadingDetails();
+      }
+    }, [favorites]);
+
+    if (!loaded || loadingDetails) {
         return(
             <View style={styles.center}>
                 <ActivityIndicator size="large" color={Colors.light.icon} />
