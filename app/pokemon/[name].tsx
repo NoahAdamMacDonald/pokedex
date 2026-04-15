@@ -13,7 +13,7 @@ export default function PokemonDetailScreen() {
     const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
     const [error, setError] = useState<string>("");
     const { toggleFavorite, isFavorite } = useFavorites();
-    const favorite = name ? isFavorite(name) : false;   
+    const favorite = isFavorite(name!); 
 
     const load = async () => {
         if (!name) return;
