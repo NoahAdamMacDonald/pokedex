@@ -97,12 +97,12 @@ export default function PokemonDetailScreen() {
             <ActivityIndicator size="large" color={Colors.light.tint} />
           )}
 
-          <View style={styles.card}>
-            <Text style={styles.stat}>Height: {data.height}</Text>{" "}
-            <Text style={styles.stat}>Weight: {data.weight}</Text>{" "}
-            <Text style={styles.stat}>
-              Base experience: {data.base_experience}
-            </Text>{" "}
+          {/*About*/}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>About</Text>
+            <Text style={styles.itemText}>Height: {data.height}</Text>
+            <Text style={styles.itemText}>Weight: {data.weight}</Text>
+            <Text style={styles.itemText}>Base XP: {data.base_experience}</Text>
           </View>
         </View>
       </View>
@@ -118,70 +118,97 @@ function Centered({ children }: any) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.light.background,
-        padding: 20,
-        alignItems: "stretch",
-    },
+  container: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+    padding: 20,
+  },
 
-    header: {
-        width: "100%",
-        alignItems: "flex-start",
-        marginBottom: 10,
-    },
+  header: {
+    width: "100%",
+    alignItems: "flex-start",
+    marginBottom: 10,
+  },
 
-    back: {
-        color: Colors.light.tint,
-        fontSize: 18,
-        fontFamily: Fonts.sans,
-    },
+  back: {
+    color: Colors.light.tint,
+    fontSize: 18,
+    fontFamily: Fonts.sans,
+  },
 
-    content: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "flex-start",
-        width: "100%",
-    },
+  content: {
+    flex: 1,
+    alignItems: "center",
+    width: "100%",
+  },
 
-    nameRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
-        marginBottom: 20,
-    },
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 20,
+  },
 
-    name: {
-        fontSize: 32,
-        fontFamily: Fonts.sans,
-        fontWeight: "bold",
-        textTransform: "capitalize",
-        color: Colors.light.text,
-    },
+  name: {
+    fontSize: 32,
+    fontFamily: Fonts.sans,
+    fontWeight: "bold",
+    textTransform: "capitalize",
+    color: Colors.light.text,
+  },
 
-    star: {
-        fontSize: 32,
-        color: Colors.light.tint,
-    },
+  star: {
+    fontSize: 32,
+    color: Colors.light.tint,
+  },
 
-    image: {
-        width: 200,
-        height: 200,
-        marginBottom: 20,
-    },
+  image: {
+    width: 260,
+    height: 260,
+    marginBottom: 20,
+  },
 
-    card: {
-        backgroundColor: "#f2f2f2",
-        padding: 20,
-        borderRadius: 16,
-        width: "100%",
-        marginTop: 10,
-    },
+  section: {
+    width: "100%",
+    backgroundColor: "#f7f7f7",
+    padding: 16,
+    borderRadius: 14,
+    marginTop: 16,
+  },
 
-    stat: {
-        fontSize: 18,
-        fontFamily: Fonts.sans,
-        marginBottom: 8,
-        color: Colors.light.text,
-    },
+  sectionTitle: {
+    fontSize: 22,
+    fontFamily: Fonts.sans,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: Colors.light.text,
+  },
+
+  itemText: {
+    fontSize: 18,
+    fontFamily: Fonts.sans,
+    marginBottom: 6,
+    color: Colors.light.text,
+    textTransform: "capitalize",
+  },
+
+  typeRow: {
+    flexDirection: "row",
+    gap: 10,
+    flexWrap: "wrap",
+  },
+
+  typeBadge: {
+    backgroundColor: Colors.light.tint,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+  },
+
+  typeText: {
+    color: "white",
+    fontFamily: Fonts.sans,
+    fontSize: 16,
+    textTransform: "capitalize",
+},
 });
