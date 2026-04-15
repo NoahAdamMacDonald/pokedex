@@ -58,93 +58,110 @@ export default function FavoritesScreen() {
     }
     
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Favorites</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Favorites</Text>
 
-        <FlatList
-          data={favorites}
-          keyExtractor={(name) => name}
-          contentContainerStyle={{ paddingBottom: 40 }}
-          renderItem={({ item }) => (
+      <FlatList
+        data={favorites}
+        keyExtractor={(name) => name}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        renderItem={({ item }) => {
+          const info = details[item];
+
+          return (
             <View style={styles.card}>
-              {/* Name navigates to detail */}
-              <Link
-                href={{ pathname: "/pokemon/[name]", params: { name: item } }}
-                asChild>
-                <Pressable style={{ flex: 1 }}>
-                  <Text style={styles.cardText}>{item}</Text>
-                </Pressable>
-              </Link>
-
-              {/* Star toggles favorite */}
-              <Pressable
-                onPress={() => {
-                  toggleFavorite(item);
-                  reload(); // immediately refresh list
-                }}>
-                <Text style={styles.star}>{isFavorite(item) ? "★" : "☆"}</Text>
-              </Pressable>
+              {/*Image*/}
+              {info?.sprites?.other?.["official-artwork"]?.front_default ? (
+                <Image
+                  source={{
+                    uri: info.sprites.other["official-artwork"].front_default,
+                  }}
+                  style={styles.thumb}
+                />
+              ) : (
+                <View style={styles.thumbPlaceholder} />
+              )}
             </View>
-          )}
-        />
-      </View>
+          );
+        }}
+      />
+    </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.light.background,
-        padding: 20,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+    padding: 20,
+  },
 
-    title: {
-        fontSize: 32,
-        fontFamily: Fonts.sans,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 20,
-        color: Colors.light.text,
-    },
+  title: {
+    fontSize: 32,
+    fontFamily: Fonts.sans,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+    color: Colors.light.text,
+  },
 
-    center: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-    emptyText: {
-        fontSize: 22,
-        fontFamily: Fonts.sans,
-        color: Colors.light.text,
-        marginBottom: 8,
-    },
+  emptyText: {
+    fontSize: 22,
+    fontFamily: Fonts.sans,
+    color: Colors.light.text,
+    marginBottom: 8,
+  },
 
-    emptySub: {
-        fontSize: 16,
-        fontFamily: Fonts.sans,
-        color: Colors.light.icon,
-    },
+  emptySub: {
+    fontSize: 16,
+    fontFamily: Fonts.sans,
+    color: Colors.light.icon,
+  },
 
-    card: {
-        backgroundColor: "#f2f2f2",
-        padding: 16,
-        borderRadius: 12,
-        marginBottom: 10,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
+  card: {
+    backgroundColor: "#f2f2f2",
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
 
-    cardText: {
-        fontSize: 18,
-        fontFamily: Fonts.sans,
-        textTransform: "capitalize",
-        color: Colors.light.text,
-    },
+  thumb: {
+    width: 60,
+    height: 60,
+  },
 
-    star: {
-        fontSize: 24,
-        color: Colors.light.tint,
-    },
+  thumbPlaceholder: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#ddd",
+    borderRadius: 8,
+  },
+
+  cardText: {
+    fontSize: 20,
+    fontFamily: Fonts.sans,
+    textTransform: "capitalize",
+    color: Colors.light.text,
+  },
+
+  subText: {
+    fontSize: 14,
+    fontFamily: Fonts.sans,
+    color: Colors.light.icon,
+    textTransform: "capitalize",
+  },
+
+  star: {
+    fontSize: 28,
+    color: Colors.light.tint,
+  },
 });
