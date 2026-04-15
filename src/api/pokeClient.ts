@@ -21,3 +21,10 @@ export async function fetchPokemonDetail(name: string) {
     if (!response.ok) throw new Error("Failed to load Pokémon detail.");
     return response.json();
 }
+
+export async function fetchAllPokemon(): Promise<PokemonListItem[]> {
+  const response = await fetch(`{BASE_URL}/pokemon?limit=2000`);
+  if (!response.ok) throw new Error("Failed to load Pokémon.");
+  const data: PokemonListResponse = await response.json();
+  return data.results;  
+}

@@ -180,5 +180,5 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.sans,
         marginBottom: 8,
         color: Colors.light.text,
-},
+    },
 });
