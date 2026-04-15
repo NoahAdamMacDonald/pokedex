@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, ActivityIndicator, Pressable, StyleSheet } from "react-native";
+import { View, Text, Image, ActivityIndicator, Pressable, StyleSheet, ScrollView } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { fetchPokemonDetail } from "../../src/api/pokeClient";
 import { useFavorites } from "../../src/hooks/useFavorites";
@@ -76,6 +76,7 @@ export default function PokemonDetailScreen() {
           </Pressable>
         </View>
 
+        {/*Name and Favourite*/}
         <View style={styles.content}>
           <View style={styles.nameRow}>
             <Text style={styles.name}>{name}</Text>
@@ -85,13 +86,15 @@ export default function PokemonDetailScreen() {
             </Pressable>
           </View>
 
-          {data.sprites?.front_default ? (
+          {/*Image*/}
+          {data.sprites?.other?.["official-artwork"].front_default ? (
             <Image
-              source={{ uri: data.sprites.front_default }}
+              source={{ uri: data.sprites.other["official-artwork"].front_default }}
               style={styles.image}
+              resizeMode="contain"
             />
           ) : (
-            <Text>No image available.</Text>
+            <ActivityIndicator size="large" color={Colors.light.tint} />
           )}
 
           <View style={styles.card}>
