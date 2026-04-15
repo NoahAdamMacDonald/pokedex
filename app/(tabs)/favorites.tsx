@@ -1,8 +1,9 @@
 import React, { useCallback } from "react";
-import { View, Text, FlatList, Pressable, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, Image, FlatList, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { Link } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 import { useFavorites } from "../../src/hooks/useFavorites";
+import { fetchPokemonDetail } from "../../src/api/pokeClient";
 import { Colors, Fonts } from "@/constants/theme";
 
 
