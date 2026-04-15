@@ -98,7 +98,9 @@ export default function PokemonDetailScreen() {
           ) : (
             <ActivityIndicator size="large" color={Colors.light.tint} />
           )}
+        </View>
 
+        <ScrollView style={styles.container}>
           {/*About*/}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>About</Text>
@@ -118,7 +120,17 @@ export default function PokemonDetailScreen() {
               ))}
             </Text>
           </View>
-        </View>
+
+          {/*Abilities*/}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Abilities</Text>
+            {data.abilities.map((ability: any) => (
+              <Text key={ability.ability.name} style={styles.itemText}>
+                • {ability.ability.name} {ability.is_hidden ? "(Hidden)" : ""}
+              </Text>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     );
 }
