@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { View, Text, Image, FlatList, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { Link } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
@@ -9,6 +9,8 @@ import { Colors, Fonts } from "@/constants/theme";
 
 export default function FavoritesScreen() {
     const { favorites, loaded, reload, toggleFavorite, isFavorite    } = useFavorites();
+    const [details, setDetails] = useState<Record<string, any>>({});
+    const [loadingDetails, setLoadingDetails] = useState(true);
 
     useFocusEffect(
         useCallback(() => {
