@@ -87,14 +87,26 @@ export default function FavoritesScreen() {
                 href={{
                   pathname: "/pokemon/[name]",
                   params: { name: item },
-                  }} asChild>
-                <Pressable style={{flex: 1}}>
+                }}
+                asChild>
+                <Pressable style={{ flex: 1 }}>
                   <Text style={styles.cardText}>{item}</Text>
                   {info && (
-                    <Text style={styles.subText}>{info.types?.[0]?.type?.name}</Text>
+                    <Text style={styles.subText}>
+                      {info.types?.[0]?.type?.name}
+                    </Text>
                   )}
                 </Pressable>
               </Link>
+
+              {/* Star toggle */}
+              <Pressable
+                onPress={() => {
+                  toggleFavorite(item);
+                  reload();
+                }}>
+                <Text style={styles.star}>{isFavorite(item) ? "★" : "☆"}</Text>
+              </Pressable>
             </View>
           );
         }}
