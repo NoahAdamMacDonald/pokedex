@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Image, ActivityIndicator, Pressable, StyleSheet } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { fetchPokemonDetail } from "../../src/api/pokeClient";
+import { useFavorites } from "../../src/hooks/useFavorites";
 import { Colors, Fonts } from "@/constants/theme";
 
 export default function PokemonDetailScreen() {
-  const { name } = useLocalSearchParams<{ name?: string }>();
-  const router = useRouter();
+    const { name } = useLocalSearchParams<{ name?: string }>();
+    const router = useRouter();
 
-  const [data, setData] = useState<any>(null);
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const [error, setError] = useState<string>("");
+    const [data, setData] = useState<any>(null);
+    const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+    const [error, setError] = useState<string>("");
+    const { toggleFavorite, isFavorite } = useFavorites();
+    const favorite = name ? isFavorite(name) : false;   
 
     const load = async () => {
         if (!name) return;
@@ -74,24 +77,30 @@ export default function PokemonDetailScreen() {
         </View>
 
         <View style={styles.content}>
+          <View style={styles.nameRow}>
             <Text style={styles.name}>{name}</Text>
 
-            {data.sprites?.front_default ? (
-            <Image
-                source={{ uri: data.sprites.front_default }}
-                style={styles.image}
-            />
-            ) : (
-            <Text>No image available.</Text>
-            )}
+            <Pressable onPress={() => toggleFavorite(name)}>
+              <Text style={styles.star}>{favorite ? "★" : "☆"}</Text>
+            </Pressable>
+          </View>
 
-            <View style={styles.card}>
-                <Text style={styles.stat}>Height: {data.height}</Text>{" "}
-                <Text style={styles.stat}>Weight: {data.weight}</Text>{" "}
-                <Text style={styles.stat}>
-                    Base experience: {data.base_experience}
-                </Text>{" "}
-            </View>
+          {data.sprites?.front_default ? (
+            <Image
+              source={{ uri: data.sprites.front_default }}
+              style={styles.image}
+            />
+          ) : (
+            <Text>No image available.</Text>
+          )}
+
+          <View style={styles.card}>
+            <Text style={styles.stat}>Height: {data.height}</Text>{" "}
+            <Text style={styles.stat}>Weight: {data.weight}</Text>{" "}
+            <Text style={styles.stat}>
+              Base experience: {data.base_experience}
+            </Text>{" "}
+          </View>
         </View>
       </View>
     );
@@ -110,19 +119,19 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.light.background,
         padding: 20,
-    alignItems: "stretch",
+        alignItems: "stretch",
     },
 
     header: {
         width: "100%",
         alignItems: "flex-start",
-    marginBottom: 10,
+        marginBottom: 10,
     },
 
     back: {
         color: Colors.light.tint,
         fontSize: 18,
-    fontFamily: Fonts.sans,
+        fontFamily: Fonts.sans,
     },
 
     content: {
@@ -132,13 +141,24 @@ const styles = StyleSheet.create({
         width: "100%",
     },
 
+    nameRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        marginBottom: 20,
+    },
+
     name: {
         fontSize: 32,
         fontFamily: Fonts.sans,
         fontWeight: "bold",
         textTransform: "capitalize",
         color: Colors.light.text,
-        marginBottom: 20,
+    },
+
+    star: {
+        fontSize: 32,
+        color: Colors.light.tint,
     },
 
     image: {
@@ -160,5 +180,5 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.sans,
         marginBottom: 8,
         color: Colors.light.text,
-    },
+},
 });
