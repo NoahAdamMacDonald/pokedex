@@ -72,35 +72,39 @@ export default function HomeScreen() {
         </View>
       )}
 
-      {status === "success" && (
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.name}
-          contentContainerStyle={{ paddingBottom: 40 }}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              {/* Name navigates to detail */}
-              <Link
-                href={{
-                  pathname: "/pokemon/[name]",
-                  params: { name: item.name },
-                }}
-                asChild>
-                <Pressable style={{ flex: 1 }}>
-                  <Text style={styles.cardText}>{item.name}</Text>
-                </Pressable>
-              </Link>
+      {status === "success" &&
+        (filtered.length === 0 && search.trim() !== "" ? (
+          <View style={styles.center}>
+            <Text style={styles.emptyText}>No Pokémon found</Text>
+            <Text style={styles.emptySub}>Try a different name.</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={filtered}
+            keyExtractor={(item) => item.name}
+            contentContainerStyle={{ paddingBottom: 40 }}
+            renderItem={({ item }) => (
+              <View style={styles.card}>
+                <Link
+                  href={{
+                    pathname: "/pokemon/[name]",
+                    params: { name: item.name },
+                  }}
+                  asChild>
+                  <Pressable style={{ flex: 1 }}>
+                    <Text style={styles.cardText}>{item.name}</Text>
+                  </Pressable>
+                </Link>
 
-              {/* Star toggles favorite */}
-              <Pressable onPress={() => toggleFavorite(item.name)}>
-                <Text style={styles.star}>
-                  {isFavorite(item.name) ? "★" : "☆"}
-                </Text>
-              </Pressable>
-            </View>
-          )}
-        />
-      )}
+                <Pressable onPress={() => toggleFavorite(item.name)}>
+                  <Text style={styles.star}>
+                    {isFavorite(item.name) ? "★" : "☆"}
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+          />
+        ))}
     </View>
   );
 }
@@ -156,8 +160,24 @@ const styles = StyleSheet.create({
     color: "red",
     marginBottom: 8,
   },
+  emptyText: {
+  fontSize: 22,
+  fontFamily: Fonts.sans,
+  color: Colors.light.text,
+  marginBottom: 8,
+},
+  emptySub: {
+    fontSize: 16,
+    fontFamily: Fonts.sans,
+    color: Colors.light.icon,
+  },
   retryText: {
     color: Colors.light.tint,
     fontWeight: "bold",
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
