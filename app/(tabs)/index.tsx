@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { fetchPokemonList, PokemonListItem } from '../../src/api/pokeClient';
+import { useFavorites } from '../../src/hooks/useFavorites';
 import { Colors, Fonts  } from '@/constants/theme';
 
 export default function HomeScreen() {
   const [data, setData] = useState<PokemonListItem[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle",);
   const [error, setError] = useState<string>("");
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const load = async () => {
     try {
@@ -28,11 +30,11 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Pokédex
-      </Text>
+      <Text style={styles.title}>Pokédex</Text>
 
-      {status === "loading" && <ActivityIndicator size="large" color={Colors.light.tint} />}
+      {status === "loading" && (
+        <ActivityIndicator size="large" color={Colors.light.tint} />
+      )}
 
       {status === "error" && (
         <View style={styles.errorBox}>
@@ -49,13 +51,26 @@ export default function HomeScreen() {
           keyExtractor={(item) => item.name}
           contentContainerStyle={{ paddingBottom: 40 }}
           renderItem={({ item }) => (
-            <Link
-              href={{ pathname: "/pokemon/[name]", params: { name: item.name } }}
-              asChild>
-              <Pressable style={styles.card}>
-                <Text style={styles.cardText}>{item.name}</Text>
+            <View style={styles.card}>
+              {/* Name navigates to detail */}
+              <Link
+                href={{
+                  pathname: "/pokemon/[name]",
+                  params: { name: item.name },
+                }}
+                asChild>
+                <Pressable style={{ flex: 1 }}>
+                  <Text style={styles.cardText}>{item.name}</Text>
+                </Pressable>
+              </Link>
+
+              {/* Star toggles favorite */}
+              <Pressable onPress={() => toggleFavorite(item.name)}>
+                <Text style={styles.star}>
+                  {isFavorite(item.name) ? "★" : "☆"}
+                </Text>
               </Pressable>
-            </Link>
+            </View>
           )}
         />
       )}
@@ -82,12 +97,19 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   cardText: {
     fontSize: 18,
     fontFamily: Fonts.sans,
     color: Colors.light.text,
     textTransform: "capitalize",
+  },
+  star: {
+    fontSize: 24,
+    color: Colors.light.tint,
   },
   errorBox: {
     padding: 16,
