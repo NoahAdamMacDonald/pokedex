@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Pressable, StyleSheet, TextInput } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Link } from 'expo-router';
 import { fetchPokemonList, PokemonListItem } from '../../src/api/pokeClient';
@@ -9,6 +9,8 @@ import { Colors, Fonts  } from '@/constants/theme';
 export default function HomeScreen() {
   const [data, setData] = useState<PokemonListItem[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle",);
+  const [filtered, setFiltered] = useState<PokemonListItem[]>([]);
+  const [search, setSearch] = useState<string>("");
   const [error, setError] = useState<string>("");
   const { toggleFavorite, isFavorite, reload } = useFavorites();
 
@@ -16,8 +18,9 @@ export default function HomeScreen() {
     try {
       setStatus("loading");
       setError("");
-      const list = await fetchPokemonList();
+      const list = await fetchPokemonList(2000);
       setData(list);
+      setFiltered(list);
       setStatus("success");
     } catch (error: any) {
       setStatus("error");
@@ -29,6 +32,14 @@ export default function HomeScreen() {
     load();
   }, []);
 
+  useEffect(() => {
+    if (search.trim() === "") {
+      setFiltered(data);
+    } else {
+      const s = search.toLowerCase().trim();
+      setFiltered(data.filter((p) => p.name.includes(s)));
+    }
+  }, [search, data]);
   useFocusEffect(
     useCallback(() => {
       reload();
@@ -38,6 +49,15 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pokédex</Text>
+
+      {/* Search Bar */}
+      <TextInput
+        style={styles.search}
+        placeholder="Search Pokémon..."
+        placeholderTextColor={Colors.light.icon}
+        value={search}
+        onChangeText={setSearch}
+      />
 
       {status === "loading" && (
         <ActivityIndicator size="large" color={Colors.light.tint} />
@@ -54,7 +74,7 @@ export default function HomeScreen() {
 
       {status === "success" && (
         <FlatList
-          data={data}
+          data={filtered}
           keyExtractor={(item) => item.name}
           contentContainerStyle={{ paddingBottom: 40 }}
           renderItem={({ item }) => (
@@ -97,6 +117,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    color: Colors.light.text,
+  },
+  search: {
+    backgroundColor: "#eaeaea",
+    padding: 12,
+    borderRadius: 12,
+    fontSize: 16,
+    fontFamily: Fonts.sans,
+    marginBottom: 16,
     color: Colors.light.text,
   },
   card: {
