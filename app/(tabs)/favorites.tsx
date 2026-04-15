@@ -81,6 +81,20 @@ export default function FavoritesScreen() {
               ) : (
                 <View style={styles.thumbPlaceholder} />
               )}
+
+              {/*Name and Type*/}
+              <Link
+                href={{
+                  pathname: "/pokemon/[name]",
+                  params: { name: item },
+                  }} asChild>
+                <Pressable style={{flex: 1}}>
+                  <Text style={styles.cardText}>{item}</Text>
+                  {info && (
+                    <Text style={styles.subText}>{info.types?.[0]?.type?.name}</Text>
+                  )}
+                </Pressable>
+              </Link>
             </View>
           );
         }}
