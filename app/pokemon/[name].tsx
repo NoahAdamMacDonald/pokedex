@@ -89,7 +89,9 @@ export default function PokemonDetailScreen() {
           {/*Image*/}
           {data.sprites?.other?.["official-artwork"].front_default ? (
             <Image
-              source={{ uri: data.sprites.other["official-artwork"].front_default }}
+              source={{
+                uri: data.sprites.other["official-artwork"].front_default,
+              }}
               style={styles.image}
               resizeMode="contain"
             />
@@ -103,6 +105,18 @@ export default function PokemonDetailScreen() {
             <Text style={styles.itemText}>Height: {data.height}</Text>
             <Text style={styles.itemText}>Weight: {data.weight}</Text>
             <Text style={styles.itemText}>Base XP: {data.base_experience}</Text>
+          </View>
+
+          {/*Types*/}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Types</Text>
+            <Text style={styles.typeRow}>
+              {data.types.map((type: any) => (
+                <View key={type.type.name} style={styles.typeBadge}>
+                  <Text style={styles.typeText}>{type.type.name}</Text>
+                </View>
+              ))}
+            </Text>
           </View>
         </View>
       </View>
